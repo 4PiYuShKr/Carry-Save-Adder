@@ -1,0 +1,72 @@
+loctaion of the libray : ---   xdg-open /home/install/FOUNDRY/digital/45nm/dig/lib
+
+
+
+rtl verification
+
+
+
+first add all the verilog codes in one file
+now launch cadence command line 
+ 	in cadence command line launch nclaunch by -  "nclaunch -new&"  (if first time)
+						      "nclaunch &"      (if already done before)
+			inside nclaunch now select the single step or multiple step as per number of files
+			now create the cds lib
+			now select no need of library for the verilog code
+			press ok 
+                        it will launch a window 
+			now one-by-one compile the verilog files and after that it will come under work lib
+			now elabroate the test bench file under worklib
+			after that there will a file generated for testbench under sanpshot 
+			select the file and click on launch simulation after that it will show a window
+			select the test bench and select send to waveform file and at last run the simulation to get the waveform
+
+
+sythesis 
+
+first add all the verilog codes in one file
+now launch genus inside cadence by -  genus
+		now run these commands one by one or make tcl file (for runnuing tcl file and type genus -f your_file_name.tcl)
+
+				# -------- Library Setup --------
+set_db lib_search_path {/home/install/FOUNDRY/digital/45nm/dig/lib}
+set_db library {slow.lib}
+
+# -------- Read RTL --------
+read_hdl delay_line.v
+read_hdl precomputer.v
+read_hdl tap_mult.v
+read_hdl fir_filter.v
+
+# Set top module
+elaborate fir_filter
+
+# -------- Constraints --------
+read_sdc fir.sdc
+
+# -------- Synthesis Effort --------
+set_db syn_generic_effort medium
+set_db syn_map_effort medium
+set_db syn_opt_effort medium
+
+# -------- Synthesis Flow --------
+syn_generic
+syn_map
+syn_opt
+
+gui_show
+
+# -------- Reports --------
+report_timing > timing.rpt
+report_area > area.rpt
+report_power > power.rpt
+report_gates > gate.rpt
+# -------- Netlist --------
+write_hdl > fir_synth.v
+write_sdc > fir_tool.sdc
+
+
+
+
+
+
